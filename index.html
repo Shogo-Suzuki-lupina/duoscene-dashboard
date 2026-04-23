@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>デュオセーヌ 営業・集客ダッシュボード</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1a2f4e;--navy-dark:#0f1e33;--navy-mid:#2a4a72;--navy-light:#3a6096;
+  --gold:#c9a84c;--gold-light:#e8c97a;--gold-dim:#a8872e;
+  --bg:#f4f6fa;--card:#ffffff;--border:#e2e8f0;--text:#1a2f4e;--muted:#64748b;
+  --green:#22c55e;--red:#ef4444;--orange:#f59e0b;--blue:#3b82f6;
+  --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#0d1b2e;--card:#1a2f4e;--border:#2a4a72;--text:#e2e8f0;--muted:#94a3b8;
+  --shadow:0 1px 3px rgba(0,0,0,.4);--shadow-md:0 4px 6px rgba(0,0,0,.4)}
+}
+body{font-family:'Hiragino Sans','Yu Gothic UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+a{color:inherit;text-decoration:none}
+/* ─── AUTH ─── */
+#auth-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 60%,var(--navy-mid) 100%);display:flex;align-items:center;justify-content:center;z-index:1000}
+.auth-card{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:48px 40px;width:100%;max-width:400px;text-align:center;backdrop-filter:blur(12px)}
+.auth-logo{font-size:1.5rem;font-weight:700;color:var(--gold);letter-spacing:.15em;margin-bottom:.3rem}
+.auth-sub{font-size:.78rem;color:rgba(255,255,255,.5);letter-spacing:.2em;margin-bottom:2.5rem}
+.auth-label{display:block;text-align:left;font-size:.82rem;color:rgba(255,255,255,.7);margin-bottom:.5rem;letter-spacing:.05em}
+.auth-input{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(201,168,76,.3);border-radius:6px;padding:12px 16px;color:#fff;font-size:.95rem;font-family:inherit;outline:none;transition:border .2s;margin-bottom:1.2rem}
+.auth-input:focus{border-color:var(--gold)}
+.auth-btn{width:100%;background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);color:#fff;font-size:.95rem;font-weight:700;padding:13px;border:none;border-radius:6px;cursor:pointer;font-family:inherit;letter-spacing:.08em;transition:opacity .2s}
+.auth-btn:hover{opacity:.9}
+.auth-error{color:#fc8181;font-size:.82rem;margin-top:.8rem;display:none}
+/* ─── APP ─── */
+#app{display:none;min-height:100vh;flex-direction:column}
+/* HEADER */
+.hdr{background:var(--navy-dark);color:#fff;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;border-bottom:2px solid var(--gold-dim)}
+.hdr-title{font-size:.95rem;font-weight:700;letter-spacing:.06em;display:flex;align-items:center;gap:10px}
+.hdr-title span{color:var(--gold);font-size:1.1rem}
+.hdr-right{display:flex;align-items:center;gap:16px;font-size:.75rem;color:rgba(255,255,255,.6)}
+.hdr-updated{color:var(--gold-light);font-size:.72rem}
+.btn-logout{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);padding:5px 12px;border-radius:4px;cursor:pointer;font-family:inherit;font-size:.75rem;transition:background .2s}
+.btn-logout:hover{background:rgba(255,255,255,.15)}
+/* DASHBOARD SWITCHER */
+.dash-switch{background:var(--navy);padding:10px 20px;display:flex;gap:8px;border-bottom:1px solid var(--border)}
+.dash-btn{padding:7px 20px;border-radius:20px;border:1px solid rgba(201,168,76,.3);color:rgba(255,255,255,.7);background:transparent;cursor:pointer;font-family:inherit;font-size:.82rem;font-weight:600;letter-spacing:.04em;transition:all .2s}
+.dash-btn.active{background:var(--gold);border-color:var(--gold);color:#fff}
+/* TABS */
+.tab-bar{background:var(--card);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab-bar::-webkit-scrollbar{height:3px}
+.tab-bar::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px}
+.tab{padding:14px 18px;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.tab:hover{color:var(--navy)}
+.tab.active{color:var(--navy);border-bottom-color:var(--gold)}
+@media(prefers-color-scheme:dark){.tab:hover{color:var(--gold-light)}.tab.active{color:var(--gold)}}
+/* MAIN */
+.main{flex:1;padding:20px;max-width:1280px;margin:0 auto;width:100%}
+.tab-panel{display:none}.tab-panel.active{display:block}
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.kpi-grid{grid-template-columns:1fr}}
+.kpi-card{background:var(--card);border-radius:10px;padding:18px 20px;box-shadow:var(--shadow);border-top:3px solid var(--gold)}
+.kpi-label{font-size:.75rem;color:var(--muted);letter-spacing:.04em;margin-bottom:.5rem}
+.kpi-val{font-size:1.9rem;font-weight:700;color:var(--navy);line-height:1}
+@media(prefers-color-scheme:dark){.kpi-val{color:var(--gold-light)}}
+.kpi-target{font-size:.72rem;color:var(--muted);margin-top:4px}
+.kpi-bar-bg{background:var(--border);border-radius:99px;height:5px;margin:8px 0}
+.kpi-bar-fill{height:5px;border-radius:99px;transition:width .6s ease}
+.kpi-diff{font-size:.75rem;font-weight:600}
+.diff-pos{color:var(--green)}.diff-neg{color:var(--red)}
+/* SECTION */
+.section{background:var(--card);border-radius:10px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-size:.88rem;font-weight:700;color:var(--navy);letter-spacing:.04em}
+@media(prefers-color-scheme:dark){.section-title{color:var(--gold-light)}}
+.section-badge{font-size:.7rem;background:var(--gold);color:#fff;padding:2px 8px;border-radius:10px}
+/* GRID 2COL */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:900px){.grid3{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.grid3{grid-template-columns:1fr}}
+/* FUNNEL */
+.funnel{display:flex;align-items:stretch;gap:0;margin:8px 0}
+.funnel-step{flex:1;text-align:center;padding:12px 6px;position:relative}
+.funnel-step:not(:last-child)::after{content:'→';position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1rem;z-index:1}
+.funnel-box{background:var(--navy);color:#fff;border-radius:6px;padding:10px 4px;margin-bottom:6px}
+.funnel-name{font-size:.68rem;color:var(--muted)}
+.funnel-num{font-size:1.3rem;font-weight:700}
+.funnel-rate{font-size:.7rem;color:var(--gold-light)}
+.funnel-vs{font-size:.65rem;color:var(--muted)}
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:.82rem}
+.tbl th{background:var(--navy);color:rgba(255,255,255,.85);padding:8px 12px;text-align:left;font-weight:600;letter-spacing:.03em}
+.tbl td{padding:8px 12px;border-bottom:1px solid var(--border)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(201,168,76,.04)}
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:.7rem;font-weight:600}
+.badge-g{background:#dcfce7;color:#15803d}.badge-r{background:#fee2e2;color:#dc2626}.badge-y{background:#fef9c3;color:#a16207}.badge-b{background:#dbeafe;color:#1d4ed8}
+@media(prefers-color-scheme:dark){
+  .badge-g{background:#14532d;color:#86efac}.badge-r{background:#7f1d1d;color:#fca5a5}
+  .badge-y{background:#713f12;color:#fde68a}.badge-b{background:#1e3a5f;color:#93c5fd}
+}
+/* AI INSIGHTS */
+.ai-list{display:flex;flex-direction:column;gap:10px}
+.ai-item{display:flex;gap:12px;padding:12px;border-radius:8px;align-items:flex-start}
+.ai-warn{background:#fff7ed;border-left:3px solid #f59e0b}
+.ai-caution{background:#eff6ff;border-left:3px solid #3b82f6}
+.ai-good{background:#f0fdf4;border-left:3px solid #22c55e}
+@media(prefers-color-scheme:dark){
+  .ai-warn{background:#431407;border-left-color:#f59e0b}
+  .ai-caution{background:#0c1e3d;border-left-color:#3b82f6}
+  .ai-good{background:#052e16;border-left-color:#22c55e}
+}
+.ai-icon{font-size:1.2rem;flex-shrink:0;margin-top:1px}
+.ai-text{font-size:.82rem;line-height:1.6}
+.ai-text strong{display:block;font-size:.75rem;margin-bottom:2px}
+/* CHART CONTAINER */
+.chart-wrap{position:relative;height:220px}
+.chart-wrap-sm{position:relative;height:180px}
+/* FOOTER */
+.ftr{background:var(--navy-dark);color:rgba(255,255,255,.35);text-align:center;padding:12px;font-size:.72rem;letter-spacing:.08em;border-top:1px solid var(--gold-dim)}
+/* SCROLLABLE TABLE */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">DUO SCÈNE</div>
+    <div class="auth-sub">MANAGEMENT DASHBOARD</div>
+    <label class="auth-label">パスワード</label>
+    <input class="auth-input" type="password" id="pw-input" placeholder="パスワードを入力" autocomplete="current-password">
+    <button class="auth-btn" onclick="checkAuth()">ログイン</button>
+    <div class="auth-error" id="auth-error">パスワードが正しくありません</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- HEADER -->
+  <header class="hdr">
+    <div class="hdr-title">
+      <span>◈</span> デュオセーヌ 営業・集客ダッシュボード
+    </div>
+    <div class="hdr-right">
+      <span class="hdr-updated" id="updated-time"></span>
+      <button class="btn-logout" onclick="logout()">ログアウト</button>
+    </div>
+  </header>
+
+  <!-- DASHBOARD SWITCHER -->
+  <div class="dash-switch">
+    <button class="dash-btn active" onclick="switchDash('exec')">📊 経営層向け</button>
+    <button class="dash-btn" onclick="switchDash('mkt')">📣 現場（マーケ）向け</button>
+  </div>
+
+  <!-- ═══════════════ EXEC DASHBOARD ═══════════════ -->
+  <div id="dash-exec">
+    <div class="tab-bar" id="exec-tabs">
+      <div class="tab active" onclick="switchTab('exec','summary')">経営サマリー</div>
+      <div class="tab" onclick="switchTab('exec','funnel')">ファネル詳細</div>
+      <div class="tab" onclick="switchTab('exec','property')">物件別比較</div>
+      <div class="tab" onclick="switchTab('exec','trend')">月次トレンド</div>
+    </div>
+
+    <!-- サマリー -->
+    <div class="main tab-panel active" id="exec-tab-summary">
+      <!-- KPI -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">📩 問合せ数</div>
+          <div class="kpi-val">342</div>
+          <div class="kpi-target">目標: 400件</div>
+          <div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:85.5%;background:#3b82f6"></div></div>
+          <div class="kpi-diff diff-neg">▼ 58件 未達（85.5%）</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">🏠 来場数</div>
+          <div class="kpi-val">87</div>
+          <div class="kpi-target">目標: 80件</div>
+          <div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:100%;background:#22c55e"></div></div>
+          <div class="kpi-diff diff-pos">▲ 7件 超過（108.8%）</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">📋 申込数</div>
+          <div class="kpi-val">23</div>
+          <div class="kpi-target">目標: 28件</div>
+          <div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:82.1%;background:#f59e0b"></div></div>
+          <div class="kpi-diff diff-neg">▼ 5件 未達（82.1%）</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">🤝 契約数</div>
+          <div class="kpi-val">6</div>
+          <div class="kpi-target">目標: 8件</div>
+          <div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:75%;background:#ef4444"></div></div>
+          <div class="kpi-diff diff-neg">▼ 2件 未達（75.0%）</div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <!-- ファネル -->
+        <div class="section">
+          <div class="section-head">
+            <div class="section-title">コンバージョンファネル</div>
+          </div>
+          <div class="funnel">
+            <div class="funnel-step">
+              <div class="funnel-box" style="background:#1a2f4e"><div class="funnel-num">342</div><div class="funnel-rate" style="font-size:.65rem">問合せ</div></div>
+              <div class="funnel-name">問合せ</div>
+            </div>
+            <div class="funnel-step">
+              <div class="funnel-box" style="background:#2a4a72"><div class="funnel-num">87</div><div class="funnel-rate">25.4%</div></div>
+              <div class="funnel-name">来場</div>
+              <div class="funnel-vs">目標28.0%</div>
+            </div>
+            <div class="funnel-step">
+              <div class="funnel-box" style="background:#3a6096"><div class="funnel-num">23</div><div class="funnel-rate">26.4%</div></div>
+              <div class="funnel-name">申込</div>
+              <div class="funnel-vs">目標30.0%</div>
+            </div>
+            <div class="funnel-step">
+              <div class="funnel-box" style="background:var(--gold-dim)"><div class="funnel-num">6</div><div class="funnel-rate">26.1%</div></div>
+              <div class="funnel-name">契約</div>
+              <div class="funnel-vs">目標28.0%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 物件別 -->
+        <div class="section">
+          <div class="section-head"><div class="section-title">物件別契約進捗</div></div>
+          <div class="chart-wrap"><canvas id="c-prop-contract"></canvas></div>
+        </div>
+      </div>
+
+      <!-- AI -->
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title">🤖 AI示唆・アクション提案</div>
+          <div class="section-badge">GPT分析</div>
+        </div>
+        <div class="ai-list">
+          <div class="ai-item ai-warn">
+            <div class="ai-icon">⚠️</div>
+            <div class="ai-text"><strong>【警告】契約数が目標比75%—申込→契約の転換率改善が急務</strong>申込23件に対し契約6件（26.1%）。業界平均35%と比べ低水準。商談フォローアップの頻度を週2回に増やし、住宅ローン相談会を実施することを推奨。</div>
+          </div>
+          <div class="ai-item ai-caution">
+            <div class="ai-icon">👁</div>
+            <div class="ai-text"><strong>【注視】問合せ数が目標比85.5%—SEO・広告の訴求見直しを検討</strong>問合せ数が目標に58件不足。Google広告のCVRが低下傾向のため、LPのファーストビュー改修と検索キーワードの見直しを推奨。</div>
+          </div>
+          <div class="ai-item ai-good">
+            <div class="ai-icon">✅</div>
+            <div class="ai-text"><strong>【好調】来場数が目標比108.8%—展示場誘導施策が奏功</strong>来場87件と目標超過。SNS来場予約キャンペーンの効果が高く、引き続き予算配分の維持・拡大を推奨。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ファネル詳細 -->
+    <div class="main tab-panel" id="exec-tab-funnel">
+      <div class="section">
+        <div class="section-head"><div class="section-title">チャネル別転換率</div></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>チャネル</th><th>問合せ</th><th>来場</th><th>問→来 CVR</th><th>申込</th><th>来→申 CVR</th><th>契約</th><th>申→契 CVR</th><th>総合CVR</th></tr></thead>
+            <tbody>
+              <tr><td>Google広告</td><td>124</td><td>28</td><td><span class="badge badge-y">22.6%</span></td><td>8</td><td><span class="badge badge-g">28.6%</span></td><td>2</td><td><span class="badge badge-y">25.0%</span></td><td>1.6%</td></tr>
+              <tr><td>Meta広告</td><td>89</td><td>22</td><td><span class="badge badge-g">24.7%</span></td><td>5</td><td><span class="badge badge-y">22.7%</span></td><td>1</td><td><span class="badge badge-r">20.0%</span></td><td>1.1%</td></tr>
+              <tr><td>Yahoo広告</td><td>54</td><td>14</td><td><span class="badge badge-g">25.9%</span></td><td>4</td><td><span class="badge badge-g">28.6%</span></td><td>2</td><td><span class="badge badge-g">50.0%</span></td><td>3.7%</td></tr>
+              <tr><td>LINE広告</td><td>43</td><td>13</td><td><span class="badge badge-g">30.2%</span></td><td>3</td><td><span class="badge badge-y">23.1%</span></td><td>1</td><td><span class="badge badge-y">33.3%</span></td><td>2.3%</td></tr>
+              <tr><td>SEO/自然検索</td><td>22</td><td>7</td><td><span class="badge badge-g">31.8%</span></td><td>2</td><td><span class="badge badge-g">28.6%</span></td><td>0</td><td><span class="badge badge-r">0.0%</span></td><td>0.0%</td></tr>
+              <tr><td>その他</td><td>10</td><td>3</td><td><span class="badge badge-y">30.0%</span></td><td>1</td><td><span class="badge badge-y">33.3%</span></td><td>0</td><td>—</td><td>0.0%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-head"><div class="section-title">離脱分析テーブル</div></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>離脱ステージ</th><th>離脱数</th><th>離脱率</th><th>主要離脱理由（推定）</th><th>対策優先度</th></tr></thead>
+            <tbody>
+              <tr><td>問合せ後 未来場</td><td>255</td><td>74.6%</td><td>予算・エリア不一致、レスポンス遅延</td><td><span class="badge badge-r">高</span></td></tr>
+              <tr><td>来場後 未申込</td><td>64</td><td>73.6%</td><td>価格ネック、他社比較中、検討長期化</td><td><span class="badge badge-r">高</span></td></tr>
+              <tr><td>申込後 未契約</td><td>17</td><td>73.9%</td><td>ローン審査、プラン変更、心変わり</td><td><span class="badge badge-y">中</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 物件別比較 -->
+    <div class="main tab-panel" id="exec-tab-property">
+      <div class="section">
+        <div class="section-head"><div class="section-title">物件別KPI一覧</div></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>物件名</th><th>問合せ</th><th>目標</th><th>達成率</th><th>来場</th><th>申込</th><th>契約</th><th>総合CVR</th><th>ステータス</th></tr></thead>
+            <tbody>
+              <tr><td>久我山</td><td>112</td><td>120</td><td>93.3%</td><td>32</td><td>9</td><td>2</td><td>1.8%</td><td><span class="badge badge-y">注視</span></td></tr>
+              <tr><td>新浦安</td><td>98</td><td>110</td><td>89.1%</td><td>25</td><td>7</td><td>2</td><td>2.0%</td><td><span class="badge badge-y">注視</span></td></tr>
+              <tr><td>大宮東新井</td><td>84</td><td>100</td><td>84.0%</td><td>19</td><td>4</td><td>1</td><td>1.2%</td><td><span class="badge badge-r">要対策</span></td></tr>
+              <tr><td>覚王山</td><td>48</td><td>70</td><td>68.6%</td><td>11</td><td>3</td><td>1</td><td>2.1%</td><td><span class="badge badge-r">要対策</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="section">
+          <div class="section-head"><div class="section-title">問合せ数 vs 目標</div></div>
+          <div class="chart-wrap"><canvas id="c-prop-inquiry"></canvas></div>
+        </div>
+        <div class="section">
+          <div class="section-head"><div class="section-title">契約CPA比較（¥千）</div></div>
+          <div class="chart-wrap"><canvas id="c-prop-cpa"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 月次トレンド -->
+    <div class="main tab-panel" id="exec-tab-trend">
+      <div class="section">
+        <div class="section-head"><div class="section-title">月次 問合せ数・契約数（過去6ヶ月）</div></div>
+        <div class="chart-wrap" style="height:260px"><canvas id="c-trend"></canvas></div>
+      </div>
+      <div class="section">
+        <div class="section-head"><div class="section-title">月次サマリー</div></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>月</th><th>問合せ</th><th>来場</th><th>申込</th><th>契約</th><th>問→来CVR</th><th>来→申CVR</th><th>申→契CVR</th></tr></thead>
+            <tbody>
+              <tr><td>2025年11月</td><td>290</td><td>72</td><td>20</td><td>5</td><td>24.8%</td><td>27.8%</td><td>25.0%</td></tr>
+              <tr><td>2025年12月</td><td>265</td><td>65</td><td>18</td><td>4</td><td>24.5%</td><td>27.7%</td><td>22.2%</td></tr>
+              <tr><td>2026年1月</td><td>310</td><td>78</td><td>22</td><td>7</td><td>25.2%</td><td>28.2%</td><td>31.8%</td></tr>
+              <tr><td>2026年2月</td><td>328</td><td>81</td><td>21</td><td>6</td><td>24.7%</td><td>25.9%</td><td>28.6%</td></tr>
+              <tr><td>2026年3月</td><td>355</td><td>90</td><td>25</td><td>8</td><td>25.4%</td><td>27.8%</td><td>32.0%</td></tr>
+              <tr><td>2026年4月</td><td>342</td><td>87</td><td>23</td><td>6</td><td>25.4%</td><td>26.4%</td><td>26.1%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ MARKETING DASHBOARD ═══════════════ -->
+  <div id="dash-mkt" style="display:none">
+    <div class="tab-bar" id="mkt-tabs">
+      <div class="tab active" onclick="switchTab('mkt','ads')">広告パフォーマンス</div>
+      <div class="tab" onclick="switchTab('mkt','roi')">チャネル別ROI</div>
+      <div class="tab" onclick="switchTab('mkt','ga4')">GA4・SEO</div>
+      <div class="tab" onclick="switchTab('mkt','lead')">リード分析</div>
+    </div>
+
+    <!-- 広告パフォーマンス -->
+    <div class="main tab-panel active" id="mkt-tab-ads">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">💰 広告費</div>
+          <div class="kpi-val">¥311K</div>
+          <div class="kpi-target">予算: ¥380K</div>
+          <div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:81.8%;background:#3b82f6"></div></div>
+          <div class="kpi-diff diff-pos">予算残 ¥69K（81.8%消化）</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">🏠 来場CV数</div>
+          <div class="kpi-val">87</div>
+          <div class="kpi-target">目標: 80件</div>
+          <div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:100%;background:#22c55e"></div></div>
+          <div class="kpi-diff diff-pos">▲ 7件 超過（108.8%）</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">📊 CPA</div>
+          <div class="kpi-val">¥3,580</div>
+          <div class="kpi-target">目標: ¥4,000</div>
+          <div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:89.5%;background:#22c55e"></div></div>
+          <div class="kpi-diff diff-pos">▲ 目標比−¥420（効率良好）</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">👁 表示回数</div>
+          <div class="kpi-val">11,115</div>
+          <div class="kpi-target">CTR目標: 4.0%</div>
+          <div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:72%;background:#f59e0b"></div></div>
+          <div class="kpi-diff diff-neg">実績CTR 2.9%（目標比−1.1pt）</div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="section">
+          <div class="section-head"><div class="section-title">媒体別CPA vs 目標（¥）</div></div>
+          <div class="chart-wrap"><canvas id="c-media-cpa"></canvas></div>
+        </div>
+        <div class="section">
+          <div class="section-head"><div class="section-title">媒体別 費用・CV・CTR</div></div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>媒体</th><th>費用</th><th>CV</th><th>CPA</th><th>CTR</th><th>評価</th></tr></thead>
+              <tbody>
+                <tr><td>Google</td><td>¥142K</td><td>38</td><td>¥3,737</td><td>3.2%</td><td><span class="badge badge-y">普通</span></td></tr>
+                <tr><td>Meta</td><td>¥88K</td><td>26</td><td>¥3,385</td><td>2.4%</td><td><span class="badge badge-g">良好</span></td></tr>
+                <tr><td>Yahoo</td><td>¥52K</td><td>15</td><td>¥3,467</td><td>2.8%</td><td><span class="badge badge-g">良好</span></td></tr>
+                <tr><td>LINE</td><td>¥29K</td><td>8</td><td>¥3,625</td><td>3.8%</td><td><span class="badge badge-y">普通</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><div class="section-title">キャンペーン別パフォーマンス</div></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>LP</th><th>表示回数</th><th>クリック</th><th>CTR</th><th>来場CV</th><th>CVR</th><th>CPA</th><th>評価</th></tr></thead>
+            <tbody>
+              <tr><td>LP1（久我山・新浦安）</td><td>4,820</td><td>178</td><td>3.7%</td><td>38</td><td>21.3%</td><td>¥3,210</td><td><span class="badge badge-g">高効率</span></td></tr>
+              <tr><td>LP2（大宮東新井）</td><td>3,915</td><td>98</td><td>2.5%</td><td>28</td><td>28.6%</td><td>¥3,680</td><td><span class="badge badge-y">普通</span></td></tr>
+              <tr><td>LP3（覚王山）</td><td>2,380</td><td>46</td><td>1.9%</td><td>21</td><td>45.7%</td><td>¥4,210</td><td><span class="badge badge-r">要改善</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><div class="section-title">🤖 AI示唆</div><div class="section-badge">GPT分析</div></div>
+        <div class="ai-list">
+          <div class="ai-item ai-warn">
+            <div class="ai-icon">⚠️</div>
+            <div class="ai-text"><strong>【警告】LP3（覚王山）のCTRが1.9%—クリエイティブ刷新が急務</strong>表示回数に対しクリック率が低く、CPA¥4,210と目標超過。ファーストビューのビジュアルとコピーを改修し、A/Bテストを推奨。</div>
+          </div>
+          <div class="ai-item ai-good">
+            <div class="ai-icon">✅</div>
+            <div class="ai-text"><strong>【好調】Meta広告のCPAが最優秀（¥3,385）—予算シフトを検討</strong>Meta広告が全媒体で最も効率的。Google広告からMeta広告へ月額¥20K移行することで全体CPAを約¥3,400まで改善できる見込み。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROI -->
+    <div class="main tab-panel" id="mkt-tab-roi">
+      <div class="section">
+        <div class="section-head"><div class="section-title">チャネル別ROI比較</div></div>
+        <div class="chart-wrap" style="height:240px"><canvas id="c-roi"></canvas></div>
+      </div>
+      <div class="section">
+        <div class="section-head"><div class="section-title">費用配分 vs 推奨配分</div></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>チャネル</th><th>現在費用</th><th>現在比率</th><th>推奨配分</th><th>差異</th><th>推奨理由</th></tr></thead>
+            <tbody>
+              <tr><td>Google広告</td><td>¥142K</td><td>45.7%</td><td>38.0%</td><td><span class="diff-neg">▼7.7pt</span></td><td>CPA改善余地あり</td></tr>
+              <tr><td>Meta広告</td><td>¥88K</td><td>28.3%</td><td>35.0%</td><td><span class="diff-pos">▲6.7pt</span></td><td>最高ROI媒体</td></tr>
+              <tr><td>Yahoo広告</td><td>¥52K</td><td>16.7%</td><td>17.0%</td><td><span style="color:var(--muted)">±0.3pt</span></td><td>維持推奨</td></tr>
+              <tr><td>LINE広告</td><td>¥29K</td><td>9.3%</td><td>10.0%</td><td><span class="diff-pos">▲0.7pt</span></td><td>CTR高く効率的</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-head"><div class="section-title">🤖 AI示唆</div><div class="section-badge">GPT分析</div></div>
+        <div class="ai-list">
+          <div class="ai-item ai-caution">
+            <div class="ai-icon">👁</div>
+            <div class="ai-text"><strong>【注視】Google広告比率が高すぎる—分散投資でリスクヘッジを</strong>Google広告に45.7%集中はプラットフォームリスクが高い。Meta・YahooへのROI改善を踏まえ段階的に移行推奨。</div>
+          </div>
+          <div class="ai-item ai-good">
+            <div class="ai-icon">✅</div>
+            <div class="ai-text"><strong>【好調】総合CPAが¥3,580と目標を11%下回る—予算拡大の好機</strong>効率が良い今月は予算を¥50K増額し、特にMeta・Yahoo広告に投入することで月間来場数を+10件見込める。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GA4・SEO -->
+    <div class="main tab-panel" id="mkt-tab-ga4">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">🌐 セッション数</div>
+          <div class="kpi-val">8,432</div>
+          <div class="kpi-target">前月比 +12.4%</div>
+          <div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:84%;background:#3b82f6"></div></div>
+          <div class="kpi-diff diff-pos">▲ 前月 7,501 から増加</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">🎯 CVR（来場予約）</div>
+          <div class="kpi-val">1.03%</div>
+          <div class="kpi-target">目標: 1.20%</div>
+          <div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:85.8%;background:#f59e0b"></div></div>
+          <div class="kpi-diff diff-neg">▼ −0.17pt 未達</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">🔍 検索表示回数</div>
+          <div class="kpi-val">42,180</div>
+          <div class="kpi-target">前月比 +8.2%</div>
+          <div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:78%;background:#22c55e"></div></div>
+          <div class="kpi-diff diff-pos">▲ 伸長中</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">📍 平均掲載順位</div>
+          <div class="kpi-val">8.2位</div>
+          <div class="kpi-target">目標: 5位以内</div>
+          <div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:61%;background:#ef4444"></div></div>
+          <div class="kpi-diff diff-neg">▼ 目標まで3.2位改善が必要</div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="section">
+          <div class="section-head"><div class="section-title">チャネル別セッション</div></div>
+          <div class="chart-wrap"><canvas id="c-ga4-channel"></canvas></div>
+        </div>
+        <div class="section">
+          <div class="section-head"><div class="section-title">検索キーワード TOP5</div></div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>キーワード</th><th>表示回数</th><th>クリック</th><th>CTR</th><th>平均順位</th></tr></thead>
+              <tbody>
+                <tr><td>デュオセーヌ 久我山</td><td>8,240</td><td>612</td><td>7.4%</td><td>3.1位</td></tr>
+                <tr><td>新浦安 新築マンション</td><td>6,120</td><td>245</td><td>4.0%</td><td>7.8位</td></tr>
+                <tr><td>大宮 新築 タワーマンション</td><td>5,480</td><td>182</td><td>3.3%</td><td>9.2位</td></tr>
+                <tr><td>名古屋 覚王山 マンション</td><td>4,210</td><td>158</td><td>3.8%</td><td>6.5位</td></tr>
+                <tr><td>デュオセーヌ 価格</td><td>3,840</td><td>384</td><td>10.0%</td><td>2.4位</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- リード分析 -->
+    <div class="main tab-panel" id="mkt-tab-lead">
+      <div class="grid3">
+        <div class="section">
+          <div class="section-head"><div class="section-title">リードステータス分布</div></div>
+          <div class="chart-wrap-sm"><canvas id="c-lead-status"></canvas></div>
+        </div>
+        <div class="section">
+          <div class="section-head"><div class="section-title">初回対応時間分布</div></div>
+          <div class="chart-wrap-sm"><canvas id="c-response-time"></canvas></div>
+        </div>
+        <div class="section">
+          <div class="section-head"><div class="section-title">認知チャネル別リード数</div></div>
+          <div class="chart-wrap-sm"><canvas id="c-lead-channel"></canvas></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-head"><div class="section-title">🤖 AI示唆</div><div class="section-badge">GPT分析</div></div>
+        <div class="ai-list">
+          <div class="ai-item ai-warn">
+            <div class="ai-icon">⚠️</div>
+            <div class="ai-text"><strong>【警告】初回対応24時間超えが23%—スピード改善で来場率向上余地あり</strong>業界調査では初回対応1時間以内の来場転換率が3倍高い。CRM自動応答＋担当者アラートの設定を強く推奨。</div>
+          </div>
+          <div class="ai-item ai-caution">
+            <div class="ai-icon">👁</div>
+            <div class="ai-text"><strong>【注視】「検討中」リードが全体の38%—ナーチャリング施策が未整備</strong>メールシーケンス・LINE公式アカウントを活用したナーチャリングを導入することで、来場転換率+5〜8pt改善が見込める。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ftr">© Lupina Inc. Confidential — 本ダッシュボードの情報は社外秘です</div>
+</div>
+
+<script>
+// ─── AUTH ───
+const PW = 'duoscene2026';
+function checkAuth(){
+  const v = document.getElementById('pw-input').value;
+  if(v === PW){
+    sessionStorage.setItem('ds_auth','1');
+    showApp();
+  } else {
+    const e = document.getElementById('auth-error');
+    e.style.display='block';
+    setTimeout(()=>e.style.display='none',3000);
+  }
+}
+document.getElementById('pw-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkAuth();});
+function logout(){sessionStorage.removeItem('ds_auth');location.reload();}
+function showApp(){
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('updated-time').textContent='最終更新: '+new Date().toLocaleString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+  initCharts();
+}
+if(sessionStorage.getItem('ds_auth')==='1') showApp();
+
+// ─── TAB / DASH SWITCH ───
+function switchDash(d){
+  ['exec','mkt'].forEach(x=>{
+    document.getElementById('dash-'+x).style.display= x===d?'block':'none';
+  });
+  document.querySelectorAll('.dash-btn').forEach((b,i)=>{
+    b.classList.toggle('active',['exec','mkt'][i]===d);
+  });
+}
+function switchTab(dash, tab){
+  const tabBar = document.getElementById(dash+'-tabs');
+  tabBar.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  const panels = document.querySelectorAll('#dash-'+dash+' .tab-panel');
+  panels.forEach(p=>p.classList.remove('active'));
+  const panelId = dash+'-tab-'+tab;
+  document.getElementById(panelId).classList.add('active');
+  // highlight tab
+  const tabs = tabBar.querySelectorAll('.tab');
+  const map = {exec:{summary:0,funnel:1,property:2,trend:3},mkt:{ads:0,roi:1,ga4:2,lead:3}};
+  tabs[map[dash][tab]]?.classList.add('active');
+}
+
+// ─── CHARTS ───
+const N='#1a2f4e', G='#c9a84c', GL='rgba(201,168,76,.25)';
+const dark = window.matchMedia('(prefers-color-scheme:dark)').matches;
+const tickColor = dark?'rgba(255,255,255,.6)':'#64748b';
+const gridColor = dark?'rgba(255,255,255,.08)':'rgba(0,0,0,.06)';
+Chart.defaults.color = tickColor;
+Chart.defaults.font.family = "'Hiragino Sans','Yu Gothic UI',sans-serif";
+Chart.defaults.font.size = 11;
+
+function hbar(id,labels,data,colors,targetLine){
+  const ctx=document.getElementById(id);if(!ctx)return;
+  new Chart(ctx,{type:'bar',data:{labels,datasets:[{data,backgroundColor:colors,borderRadius:4,barThickness:22}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:v=>v.raw.toLocaleString()}}},scales:{x:{grid:{color:gridColor},ticks:{color:tickColor}},y:{grid:{display:false},ticks:{color:tickColor}}}}});
+}
+function vbar(id,labels,datasets){
+  const ctx=document.getElementById(id);if(!ctx)return;
+  new Chart(ctx,{type:'bar',data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12,color:tickColor}}},scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor}}}}});
+}
+function line(id,labels,datasets){
+  const ctx=document.getElementById(id);if(!ctx)return;
+  new Chart(ctx,{type:'bar',data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12,color:tickColor}}},scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor}}}}});
+}
+function donut(id,labels,data,colors){
+  const ctx=document.getElementById(id);if(!ctx)return;
+  new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:2,borderColor:dark?'#1a2f4e':'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:8,color:tickColor}}}}});
+}
+
+function initCharts(){
+  // 物件別契約進捗
+  vbar('c-prop-contract',
+    ['久我山','新浦安','大宮東新井','覚王山'],
+    [{label:'契約数',data:[2,2,1,1],backgroundColor:G,borderRadius:4},
+     {label:'残目標',data:[3,3,4,4],backgroundColor:dark?'rgba(255,255,255,.12)':'rgba(26,47,78,.12)',borderRadius:4}]);
+
+  // 物件別問合せ vs 目標
+  vbar('c-prop-inquiry',
+    ['久我山','新浦安','大宮東新井','覚王山'],
+    [{label:'実績',data:[112,98,84,48],backgroundColor:'#3b82f6',borderRadius:4},
+     {label:'目標',data:[120,110,100,70],backgroundColor:dark?'rgba(255,255,255,.15)':'rgba(0,0,0,.1)',borderRadius:4}]);
+
+  // 物件別CPA
+  hbar('c-prop-cpa',['久我山','新浦安','大宮東新井','覚王山'],[4200,3950,5100,5800],['#22c55e','#22c55e','#f59e0b','#ef4444']);
+
+  // トレンド
+  line('c-trend',
+    ['11月','12月','1月','2月','3月','4月'],
+    [{label:'問合せ数',data:[290,265,310,328,355,342],backgroundColor:'rgba(26,47,78,.7)',borderRadius:4,yAxisID:'y'},
+     {label:'契約数',data:[5,4,7,6,8,6],backgroundColor:G,borderRadius:4,yAxisID:'y1'}]);
+  // fix dual axis
+  const tc=document.getElementById('c-trend');
+  if(tc&&tc._chartjs_id){/* skip */}
+  else{const c=Chart.getChart('c-trend');if(c){c.options.scales.y1={type:'linear',position:'right',grid:{display:false},ticks:{color:tickColor}};c.update();}}
+
+  // 媒体別CPA vs 目標
+  vbar('c-media-cpa',
+    ['Google','Meta','Yahoo','LINE'],
+    [{label:'CPA（¥）',data:[3737,3385,3467,3625],backgroundColor:[G,'#22c55e','#3b82f6','#8b5cf6'],borderRadius:4},
+     {label:'目標CPA',data:[4000,4000,4000,4000],type:'line',borderColor:'#ef4444',backgroundColor:'transparent',borderDash:[4,4],pointRadius:0,borderWidth:1.5,order:0}]);
+
+  // ROI
+  hbar('c-roi',
+    ['Google広告','Meta広告','Yahoo広告','LINE広告','SEO'],
+    [210,285,240,195,380],
+    ['#3b82f6','#22c55e','#f59e0b','#8b5cf6',G]);
+
+  // GA4 チャネル
+  vbar('c-ga4-channel',
+    ['Organic検索','Paid検索','Social','Direct','Referral','Email'],
+    [{label:'セッション',data:[2840,2210,1520,1050,512,300],backgroundColor:[G,'#3b82f6','#22c55e','#8b5cf6','#f59e0b','#06b6d4'],borderRadius:4}]);
+
+  // リードステータス
+  donut('c-lead-status',
+    ['来場済み','商談中','検討中','ナーチャリング','失注'],
+    [87,42,130,58,25],
+    [G,'#3b82f6','#8b5cf6','#06b6d4','#94a3b8']);
+
+  // 初回対応時間
+  vbar('c-response-time',
+    ['〜1時間','1〜3時間','3〜12時間','12〜24時間','24時間超'],
+    [{label:'リード数',data:[48,65,82,58,89],backgroundColor:['#22c55e','#22c55e','#f59e0b','#f59e0b','#ef4444'],borderRadius:4}]);
+
+  // 認知チャネル
+  hbar('c-lead-channel',
+    ['Google広告','Meta広告','Yahoo広告','LINE','SEO','紹介'],
+    [124,89,54,43,22,10],
+    [G,G,G,G,G,G]);
+
+  // ─ trend dual axis fix ─
+  const tChart=Chart.getChart('c-trend');
+  if(tChart){
+    tChart.options.scales.y1={type:'linear',display:true,position:'right',grid:{display:false},ticks:{color:tickColor},title:{display:true,text:'契約数',color:G}};
+    tChart.update();
+  }
+}
+</script>
+</body>
+</html>
