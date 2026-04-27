@@ -24,49 +24,43 @@
 body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', sans-serif; font-size: 14px; min-height: 100vh; }
 
 /* LOGIN */
-#login-screen {
-  position: fixed; inset: 0; background: var(--bg);
-  display: flex; align-items: center; justify-content: center; z-index: 1000;
-}
-.login-box {
-  background: var(--surface); border: 1px solid var(--border);
-  padding: 48px; width: 360px; border-radius: 4px;
-}
+#login-screen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.login-box { background: var(--surface); border: 1px solid var(--border); padding: 48px; width: 360px; border-radius: 4px; }
 .login-logo { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 4px; color: var(--accent); margin-bottom: 8px; }
 .login-sub { color: var(--text2); font-size: 12px; margin-bottom: 32px; letter-spacing: 1px; }
-.login-box input {
-  width: 100%; background: var(--bg); border: 1px solid var(--border);
-  color: var(--text); padding: 12px 16px; font-size: 14px; border-radius: 2px;
-  outline: none; margin-bottom: 12px; font-family: 'DM Mono', monospace;
-}
+.login-box input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 16px; font-size: 14px; border-radius: 2px; outline: none; margin-bottom: 12px; font-family: 'DM Mono', monospace; }
 .login-box input:focus { border-color: var(--accent); }
-.login-box button {
-  width: 100%; background: var(--accent); color: #fff; border: none;
-  padding: 12px; font-size: 14px; cursor: pointer; border-radius: 2px;
-  font-family: 'Noto Sans JP', sans-serif; font-weight: 500; letter-spacing: 1px;
-  transition: opacity 0.2s;
-}
+.login-box button { width: 100%; background: var(--accent); color: #fff; border: none; padding: 12px; font-size: 14px; cursor: pointer; border-radius: 2px; font-family: 'Noto Sans JP', sans-serif; font-weight: 500; letter-spacing: 1px; transition: opacity 0.2s; }
 .login-box button:hover { opacity: 0.85; }
 .login-error { color: var(--danger); font-size: 12px; margin-top: 8px; display: none; }
 
 /* MAIN */
 #main { display: none; }
-.topbar {
-  position: sticky; top: 0; z-index: 100;
-  background: var(--surface); border-bottom: 1px solid var(--border);
-  padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between;
-}
+.topbar { position: sticky; top: 0; z-index: 100; background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
 .topbar-left { display: flex; align-items: center; gap: 24px; }
 .logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 4px; color: var(--accent); }
 .logo-sub { color: var(--text2); font-size: 11px; letter-spacing: 2px; }
-.topbar-right { display: flex; align-items: center; gap: 16px; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
 .last-updated { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text3); }
+
+/* PERIOD SELECTOR */
+.period-bar { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 10px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.period-label { font-size: 11px; color: var(--text3); letter-spacing: 1px; }
+.period-btn { padding: 5px 14px; font-size: 11px; border: 1px solid var(--border); background: none; color: var(--text2); cursor: pointer; border-radius: 2px; transition: all 0.15s; }
+.period-btn:hover, .period-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.period-custom { display: flex; align-items: center; gap: 8px; }
+.period-custom input { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 4px 8px; font-size: 11px; border-radius: 2px; font-family: 'DM Mono', monospace; width: 120px; }
+.compare-toggle { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text2); cursor: pointer; margin-left: 16px; }
+.compare-toggle input { cursor: pointer; }
+
+/* ALERTS */
+#alert-bar { display: none; background: rgba(247,79,79,0.08); border-bottom: 2px solid var(--danger); padding: 10px 32px; }
+.alert-item { display: inline-flex; align-items: center; gap: 8px; margin-right: 24px; font-size: 12px; color: var(--danger); }
+.alert-icon { font-size: 14px; }
+
+/* TABS */
 .tab-bar { display: flex; gap: 0; border-bottom: 1px solid var(--border); padding: 0 32px; background: var(--surface); }
-.tab {
-  padding: 12px 20px; font-size: 12px; color: var(--text2); cursor: pointer;
-  border-bottom: 2px solid transparent; letter-spacing: 1px; transition: all 0.15s;
-  white-space: nowrap;
-}
+.tab { padding: 12px 20px; font-size: 12px; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; letter-spacing: 1px; transition: all 0.15s; white-space: nowrap; }
 .tab:hover { color: var(--text); }
 .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 .content { padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
@@ -75,90 +69,88 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
 
 /* KPI GRID */
 .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-.kpi-card {
-  background: var(--surface); border: 1px solid var(--border);
-  padding: 20px 24px; border-radius: 4px; position: relative; overflow: hidden;
-}
-.kpi-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: var(--accent);
-}
-.kpi-card.warn::before { background: var(--accent2); }
+.kpi-card { background: var(--surface); border: 1px solid var(--border); padding: 20px 24px; border-radius: 4px; position: relative; overflow: hidden; }
+.kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); }
 .kpi-card.good::before { background: var(--accent3); }
+.kpi-card.warn::before { background: var(--accent2); }
 .kpi-card.bad::before { background: var(--danger); }
-.kpi-label { font-size: 11px; color: var(--text2); letter-spacing: 1px; margin-bottom: 8px; }
+.kpi-label { font-size: 11px; color: var(--text2); letter-spacing: 1px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.kpi-edit-btn { font-size: 10px; color: var(--text3); cursor: pointer; padding: 2px 6px; border: 1px solid var(--border); border-radius: 2px; background: none; }
+.kpi-edit-btn:hover { color: var(--accent); border-color: var(--accent); }
 .kpi-value { font-family: 'Bebas Neue', sans-serif; font-size: 42px; color: var(--text); letter-spacing: 2px; line-height: 1; }
 .kpi-unit { font-size: 14px; color: var(--text2); margin-left: 4px; }
-.kpi-meta { font-size: 11px; color: var(--text2); margin-top: 8px; }
-.kpi-delta { font-family: 'DM Mono', monospace; font-size: 12px; }
+.kpi-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+.kpi-target { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; }
+.kpi-delta { font-family: 'DM Mono', monospace; font-size: 11px; }
 .kpi-delta.up { color: var(--accent3); }
 .kpi-delta.down { color: var(--danger); }
-.kpi-target { color: var(--text3); }
+.kpi-achievement { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; }
+.kpi-achievement.good { color: var(--accent3); }
+.kpi-achievement.warn { color: var(--accent2); }
+.kpi-achievement.bad { color: var(--danger); }
+.progress-bar { background: var(--border); height: 4px; border-radius: 2px; margin-top: 8px; }
+.progress-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width 0.8s ease; }
+.progress-fill.good { background: var(--accent3); }
+.progress-fill.warn { background: var(--accent2); }
+.progress-fill.bad { background: var(--danger); }
+
+/* TARGET MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border); padding: 32px; width: 480px; border-radius: 4px; }
+.modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; color: var(--text); margin-bottom: 24px; }
+.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.modal-field label { display: block; font-size: 11px; color: var(--text2); margin-bottom: 6px; letter-spacing: 1px; }
+.modal-field input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; font-size: 13px; border-radius: 2px; outline: none; font-family: 'DM Mono', monospace; }
+.modal-field input:focus { border-color: var(--accent); }
+.modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+.btn-primary { background: var(--accent); color: #fff; border: none; padding: 10px 24px; font-size: 13px; cursor: pointer; border-radius: 2px; }
+.btn-secondary { background: none; color: var(--text2); border: 1px solid var(--border); padding: 10px 24px; font-size: 13px; cursor: pointer; border-radius: 2px; }
 
 /* CHARTS */
 .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-.chart-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
-.chart-card {
-  background: var(--surface); border: 1px solid var(--border);
-  padding: 20px 24px; border-radius: 4px;
-}
+.chart-card { background: var(--surface); border: 1px solid var(--border); padding: 20px 24px; border-radius: 4px; }
 .chart-card.wide { grid-column: span 2; }
-.chart-title { font-size: 11px; color: var(--text2); letter-spacing: 2px; margin-bottom: 16px; text-transform: uppercase; }
-.chart-wrap { position: relative; height: 200px; }
+.chart-title { font-size: 11px; color: var(--text2); letter-spacing: 2px; margin-bottom: 16px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+.chart-wrap { position: relative; height: 220px; }
 
 /* TABLE */
 .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.data-table th {
-  text-align: left; padding: 10px 12px; color: var(--text3);
-  font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
-  border-bottom: 1px solid var(--border); font-weight: 400;
-}
+.data-table th { text-align: left; padding: 10px 12px; color: var(--text3); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid var(--border); font-weight: 400; }
 .data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text2); }
 .data-table tr:last-child td { border-bottom: none; }
 .data-table tr:hover td { background: var(--surface2); color: var(--text); }
-.badge {
-  display: inline-block; padding: 2px 8px; border-radius: 2px;
-  font-size: 10px; letter-spacing: 1px;
-}
+.badge { display: inline-block; padding: 2px 8px; border-radius: 2px; font-size: 10px; letter-spacing: 1px; }
 .badge-good { background: rgba(79,247,160,0.1); color: var(--accent3); }
 .badge-warn { background: rgba(247,193,79,0.1); color: var(--accent2); }
 .badge-bad { background: rgba(247,79,79,0.1); color: var(--danger); }
 
-/* AI INSIGHT */
+/* INSIGHT */
 .insight-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-.insight-card {
-  background: var(--surface2); border: 1px solid var(--border);
-  padding: 16px; border-radius: 4px; border-left: 3px solid var(--accent);
-}
+.insight-card { background: var(--surface2); border: 1px solid var(--border); padding: 16px; border-radius: 4px; border-left: 3px solid var(--accent); }
 .insight-card.warn { border-left-color: var(--accent2); }
 .insight-card.good { border-left-color: var(--accent3); }
+.insight-card.bad { border-left-color: var(--danger); }
 .insight-tag { font-size: 10px; letter-spacing: 1px; color: var(--text3); margin-bottom: 6px; }
 .insight-text { font-size: 12px; color: var(--text2); line-height: 1.6; }
-
-/* LOADING */
-.loading { color: var(--text3); font-family: 'DM Mono', monospace; font-size: 12px; padding: 40px; text-align: center; }
 
 /* SECTION HEADER */
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; color: var(--text2); }
 
+/* COMPARE BADGE */
+.compare-val { font-family: 'DM Mono', monospace; font-size: 10px; padding: 1px 6px; border-radius: 2px; }
+.compare-val.up { background: rgba(79,247,160,0.1); color: var(--accent3); }
+.compare-val.down { background: rgba(247,79,79,0.1); color: var(--danger); }
+
 /* FUNNEL */
 .funnel { display: flex; align-items: flex-end; gap: 0; height: 160px; margin: 16px 0; }
 .funnel-step { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
-.funnel-bar { width: 80%; background: var(--accent); opacity: 0.7; border-radius: 2px 2px 0 0; transition: opacity 0.2s; position: relative; }
-.funnel-bar:hover { opacity: 1; }
+.funnel-bar { width: 80%; border-radius: 2px 2px 0 0; }
 .funnel-label { font-size: 10px; color: var(--text3); margin-top: 8px; letter-spacing: 1px; }
 .funnel-val { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--text); }
 .funnel-cvr { font-size: 10px; color: var(--accent2); font-family: 'DM Mono', monospace; }
 
-/* PROGRESS BAR */
-.progress-bar { background: var(--border); height: 4px; border-radius: 2px; margin-top: 8px; }
-.progress-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width 0.8s ease; }
-.progress-fill.warn { background: var(--accent2); }
-.progress-fill.good { background: var(--accent3); }
-.progress-fill.bad { background: var(--danger); }
-
-/* RESPONSIVE */
 @media (max-width: 900px) {
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .chart-grid { grid-template-columns: 1fr; }
@@ -180,6 +172,27 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
   </div>
 </div>
 
+<!-- TARGET MODAL -->
+<div class="modal-overlay" id="target-modal">
+  <div class="modal">
+    <div class="modal-title">月次目標を設定</div>
+    <div class="modal-grid">
+      <div class="modal-field"><label>問合せ数 目標</label><input type="number" id="t-inquiries" placeholder="400"></div>
+      <div class="modal-field"><label>来場数 目標</label><input type="number" id="t-visits" placeholder="80"></div>
+      <div class="modal-field"><label>申込数 目標</label><input type="number" id="t-applications" placeholder="28"></div>
+      <div class="modal-field"><label>契約数 目標</label><input type="number" id="t-contracts" placeholder="8"></div>
+      <div class="modal-field"><label>広告費 予算（円）</label><input type="number" id="t-budget" placeholder="380000"></div>
+      <div class="modal-field"><label>CPA 目標（円）</label><input type="number" id="t-cpa" placeholder="4000"></div>
+      <div class="modal-field"><label>CVR 目標（%）</label><input type="number" id="t-cvr" step="0.01" placeholder="1.20"></div>
+      <div class="modal-field"><label>アラート閾値（%）</label><input type="number" id="t-alert" placeholder="80" title="達成率がこの値を下回るとアラート表示"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
+      <button class="btn-primary" onclick="saveTargets()">保存</button>
+    </div>
+  </div>
+</div>
+
 <!-- MAIN -->
 <div id="main">
   <div class="topbar">
@@ -191,8 +204,33 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
     </div>
     <div class="topbar-right">
       <div class="last-updated" id="last-updated">データ読み込み中...</div>
+      <button onclick="openModal()" style="background:none;border:1px solid var(--accent);color:var(--accent);padding:6px 14px;cursor:pointer;font-size:11px;border-radius:2px;">目標設定</button>
       <button onclick="doLogout()" style="background:none;border:1px solid var(--border);color:var(--text2);padding:6px 12px;cursor:pointer;font-size:11px;border-radius:2px;">ログアウト</button>
     </div>
+  </div>
+
+  <!-- ALERT BAR -->
+  <div id="alert-bar">
+    <div id="alert-items"></div>
+  </div>
+
+  <!-- PERIOD BAR -->
+  <div class="period-bar">
+    <span class="period-label">期間：</span>
+    <button class="period-btn active" onclick="setPeriod('thisMonth', this)">今月</button>
+    <button class="period-btn" onclick="setPeriod('lastMonth', this)">先月</button>
+    <button class="period-btn" onclick="setPeriod('3months', this)">過去3ヶ月</button>
+    <button class="period-btn" onclick="setPeriod('6months', this)">過去6ヶ月</button>
+    <div class="period-custom">
+      <input type="month" id="period-from" value="2026-04">
+      <span style="color:var(--text3);font-size:11px">〜</span>
+      <input type="month" id="period-to" value="2026-04">
+      <button class="period-btn" onclick="setPeriodCustom()">適用</button>
+    </div>
+    <label class="compare-toggle">
+      <input type="checkbox" id="compare-toggle" onchange="toggleCompare(this.checked)">
+      <span>前期間と比較</span>
+    </label>
   </div>
 
   <div class="tab-bar">
@@ -230,9 +268,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
 
     <!-- 広告パフォーマンス -->
     <div class="section" id="tab-marketing">
-      <div class="section-header">
-        <div class="section-title">広告パフォーマンス</div>
-      </div>
+      <div class="section-header"><div class="section-title">広告パフォーマンス</div></div>
       <div class="kpi-grid" id="kpi-marketing"></div>
       <div class="chart-grid">
         <div class="chart-card">
@@ -253,9 +289,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
 
     <!-- GA4・SEO -->
     <div class="section" id="tab-web">
-      <div class="section-header">
-        <div class="section-title">GA4・SEO</div>
-      </div>
+      <div class="section-header"><div class="section-title">GA4・SEO</div></div>
       <div class="kpi-grid" id="kpi-web"></div>
       <div class="chart-grid">
         <div class="chart-card">
@@ -272,9 +306,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
 
     <!-- リード分析 -->
     <div class="section" id="tab-leads">
-      <div class="section-header">
-        <div class="section-title">リード分析</div>
-      </div>
+      <div class="section-header"><div class="section-title">リード分析</div></div>
       <div class="kpi-grid" id="kpi-leads"></div>
       <div class="chart-grid">
         <div class="chart-card">
@@ -293,13 +325,23 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
 </div>
 
 <script>
-// ===== AUTH =====
 const PASS = 'duoscene2026';
+let targets = JSON.parse(localStorage.getItem('ds_targets') || '{}');
+let compareMode = false;
+let currentPeriod = 'thisMonth';
+let charts = {};
+
+// デフォルト目標
+const defaultTargets = { inquiries: 400, visits: 80, applications: 28, contracts: 8, budget: 380000, cpa: 4000, cvr: 1.20, alert: 80 };
+
+function getTargets() { return Object.assign({}, defaultTargets, targets); }
+
+// AUTH
 function doLogin() {
-  const v = document.getElementById('pw-input').value;
-  if (v === PASS) {
+  if (document.getElementById('pw-input').value === PASS) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('main').style.display = 'block';
+    loadTargetsToModal();
     loadData();
   } else {
     document.getElementById('login-error').style.display = 'block';
@@ -311,7 +353,46 @@ function doLogout() {
   document.getElementById('pw-input').value = '';
 }
 
-// ===== TAB =====
+// MODAL
+function openModal() {
+  loadTargetsToModal();
+  document.getElementById('target-modal').classList.add('open');
+}
+function closeModal() { document.getElementById('target-modal').classList.remove('open'); }
+function loadTargetsToModal() {
+  const t = getTargets();
+  document.getElementById('t-inquiries').value = t.inquiries;
+  document.getElementById('t-visits').value = t.visits;
+  document.getElementById('t-applications').value = t.applications;
+  document.getElementById('t-contracts').value = t.contracts;
+  document.getElementById('t-budget').value = t.budget;
+  document.getElementById('t-cpa').value = t.cpa;
+  document.getElementById('t-cvr').value = t.cvr;
+  document.getElementById('t-alert').value = t.alert;
+}
+function saveTargets() {
+  targets = {
+    inquiries: +document.getElementById('t-inquiries').value || defaultTargets.inquiries,
+    visits: +document.getElementById('t-visits').value || defaultTargets.visits,
+    applications: +document.getElementById('t-applications').value || defaultTargets.applications,
+    contracts: +document.getElementById('t-contracts').value || defaultTargets.contracts,
+    budget: +document.getElementById('t-budget').value || defaultTargets.budget,
+    cpa: +document.getElementById('t-cpa').value || defaultTargets.cpa,
+    cvr: +document.getElementById('t-cvr').value || defaultTargets.cvr,
+    alert: +document.getElementById('t-alert').value || defaultTargets.alert,
+  };
+  localStorage.setItem('ds_targets', JSON.stringify(targets));
+  closeModal();
+  destroyCharts();
+  renderAll(window._data);
+}
+
+function destroyCharts() {
+  Object.values(charts).forEach(c => { try { c.destroy(); } catch(e){} });
+  charts = {};
+}
+
+// TAB
 function showTab(id, el) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -319,208 +400,229 @@ function showTab(id, el) {
   el.classList.add('active');
 }
 
-// ===== DATA LOAD =====
+// PERIOD
+function setPeriod(p, el) {
+  currentPeriod = p;
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  destroyCharts();
+  renderAll(window._data);
+}
+function setPeriodCustom() {
+  currentPeriod = 'custom';
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  destroyCharts();
+  renderAll(window._data);
+}
+function toggleCompare(v) {
+  compareMode = v;
+  destroyCharts();
+  renderAll(window._data);
+}
+
+// DATA
 async function loadData() {
   let data;
   try {
     const res = await fetch('/data/duoscene.json?t=' + Date.now());
-    if (!res.ok) throw new Error('no data');
+    if (!res.ok) throw new Error();
     data = await res.json();
     document.getElementById('last-updated').textContent = '最終更新: ' + (data.updated_at || '—');
   } catch(e) {
-    // フォールバック: デモデータ
     data = getDemoData();
     document.getElementById('last-updated').textContent = '最終更新: デモデータ表示中';
   }
+  window._data = data;
   renderAll(data);
 }
 
-function getDemoData() {
+function getPeriodData(data) {
+  const trend = data.trend;
+  const months = trend.months;
+  let indices;
+  if (currentPeriod === 'thisMonth') indices = [months.length - 1];
+  else if (currentPeriod === 'lastMonth') indices = [months.length - 2];
+  else if (currentPeriod === '3months') indices = [months.length-3, months.length-2, months.length-1];
+  else if (currentPeriod === '6months') indices = months.map((m,i) => i);
+  else indices = months.map((m,i) => i);
+
+  const sum = (arr, idxs) => idxs.reduce((a, i) => a + (arr[i] || 0), 0);
   return {
-    updated_at: '2026-04-27 09:00',
-    period: '2026年4月',
-    summary: {
-      inquiries: { value: 342, target: 400, prev: 355 },
-      visits: { value: 87, target: 80, prev: 90 },
-      applications: { value: 23, target: 28, prev: 25 },
-      contracts: { value: 6, target: 8, prev: 8 }
-    },
-    funnel: [
-      { label: '問合せ', value: 342 },
-      { label: '来場', value: 87 },
-      { label: '申込', value: 23 },
-      { label: '契約', value: 6 }
-    ],
-    channels: [
-      { name: 'Google広告', inquiries: 124, visits: 28, applications: 8, contracts: 2 },
-      { name: 'Meta広告', inquiries: 89, visits: 22, applications: 5, contracts: 1 },
-      { name: 'Yahoo広告', inquiries: 54, visits: 14, applications: 4, contracts: 2 },
-      { name: 'LINE広告', inquiries: 43, visits: 13, applications: 3, contracts: 1 },
-      { name: 'SEO/自然検索', inquiries: 22, visits: 7, applications: 2, contracts: 0 }
-    ],
-    trend: {
-      months: ['11月', '12月', '1月', '2月', '3月', '4月'],
-      inquiries: [290, 265, 310, 328, 355, 342],
-      contracts: [5, 4, 7, 6, 8, 6]
-    },
-    marketing: {
-      budget: { spent: 311000, total: 380000 },
-      cv: { value: 87, target: 80 },
-      cpa: { value: 3580, target: 4000 },
-      impressions: { value: 11115, ctr: 2.9, ctr_target: 4.0 },
-      media: [
-        { name: 'Google', cost: 142000, cv: 38, cpa: 3737, ctr: 3.2, eval: '普通' },
-        { name: 'Meta', cost: 88000, cv: 26, cpa: 3385, ctr: 2.4, eval: '良好' },
-        { name: 'Yahoo', cost: 52000, cv: 15, cpa: 3467, ctr: 2.8, eval: '良好' },
-        { name: 'LINE', cost: 29000, cv: 8, cpa: 3625, ctr: 3.8, eval: '普通' }
-      ]
-    },
-    web: {
-      sessions: { value: 8432, prev: 7501 },
-      cvr: { value: 1.03, target: 1.20 },
-      impressions: { value: 42180, prev: 38980 },
-      avg_position: { value: 8.2, target: 5.0 },
-      session_channels: {
-        labels: ['Google広告', 'Meta広告', 'オーガニック', 'ダイレクト', 'その他'],
-        values: [3210, 1890, 1540, 1120, 672]
-      },
-      keywords: [
-        { kw: 'デュオセーヌ 久我山', impressions: 8240, clicks: 612, ctr: 7.4, position: 3.1 },
-        { kw: '新浦安 新築マンション', impressions: 6120, clicks: 245, ctr: 4.0, position: 7.8 },
-        { kw: '大宮 新築 タワーマンション', impressions: 5480, clicks: 182, ctr: 3.3, position: 9.2 },
-        { kw: '名古屋 覚王山 マンション', impressions: 4210, clicks: 158, ctr: 3.8, position: 6.5 },
-        { kw: 'デュオセーヌ 価格', impressions: 3840, clicks: 384, ctr: 10.0, position: 2.4 }
-      ]
-    },
-    leads: {
-      total: { value: 342, prev: 355 },
-      hot: { value: 45, pct: 13.2 },
-      response_rate: { value: 77, target: 90 },
-      avg_response_hours: { value: 3.2, target: 1.0 },
-      status: {
-        labels: ['ホット', '検討中', '資料請求のみ', '来場済み', 'クローズ'],
-        values: [45, 130, 89, 52, 26]
-      },
-      by_channel: {
-        labels: ['Google広告', 'Meta広告', 'Yahoo広告', 'LINE', 'SEO'],
-        values: [124, 89, 54, 43, 22]
-      }
-    }
+    inquiries: sum(trend.inquiries, indices),
+    contracts: sum(trend.contracts, indices),
+    visits: sum(trend.visits || trend.inquiries.map(()=>0), indices),
+    applications: sum(trend.applications || trend.inquiries.map(()=>0), indices),
+    prevInquiries: indices[0] > 0 ? sum(trend.inquiries, indices.map(i=>i-1)) : null,
+    prevContracts: indices[0] > 0 ? sum(trend.contracts, indices.map(i=>i-1)) : null,
+    prevVisits: indices[0] > 0 ? sum(trend.visits || [], indices.map(i=>i-1)) : null,
+    prevApplications: indices[0] > 0 ? sum(trend.applications || [], indices.map(i=>i-1)) : null,
+    label: indices.map(i => months[i]).join('〜'),
+    indices,
   };
 }
 
-// ===== RENDER =====
-function renderAll(d) {
-  renderSummary(d);
-  renderMarketing(d);
-  renderWeb(d);
-  renderLeads(d);
+// ALERTS
+function checkAlerts(pd) {
+  const t = getTargets();
+  const threshold = t.alert / 100;
+  const alerts = [];
+  const pct = (v, tg) => tg ? v / tg : 1;
+  if (pct(pd.inquiries, t.inquiries) < threshold) alerts.push(`問合せ数: ${pd.inquiries}件 / 目標${t.inquiries}件（${Math.round(pct(pd.inquiries,t.inquiries)*100)}%）`);
+  if (pct(pd.visits, t.visits) < threshold) alerts.push(`来場数: ${pd.visits}件 / 目標${t.visits}件（${Math.round(pct(pd.visits,t.visits)*100)}%）`);
+  if (pct(pd.contracts, t.contracts) < threshold) alerts.push(`契約数: ${pd.contracts}件 / 目標${t.contracts}件（${Math.round(pct(pd.contracts,t.contracts)*100)}%）`);
+  const bar = document.getElementById('alert-bar');
+  const items = document.getElementById('alert-items');
+  if (alerts.length > 0) {
+    bar.style.display = 'block';
+    items.innerHTML = '⚠ アラート：' + alerts.map(a => `<span class="alert-item"><span class="alert-icon">●</span>${a}</span>`).join('');
+  } else {
+    bar.style.display = 'none';
+  }
 }
 
-function kpiCard(label, value, unit, target, prev, type='') {
-  const pct = target ? Math.round(value/target*100) : null;
-  const delta = prev ? value - prev : null;
-  const deltaStr = delta !== null ? (delta >= 0 ? '▲' : '▼') + ' ' + Math.abs(delta).toLocaleString() : '';
+// KPI CARD
+function kpiCard(label, value, unit, target, prev, prevLabel) {
+  const pct = target ? Math.round(value / target * 100) : null;
+  const delta = (prev !== null && prev !== undefined) ? value - prev : null;
+  const deltaStr = delta !== null ? (delta >= 0 ? '▲' : '▼') + Math.abs(delta).toLocaleString() : '';
   const deltaClass = delta !== null ? (delta >= 0 ? 'up' : 'down') : '';
   const barClass = pct ? (pct >= 100 ? 'good' : pct >= 80 ? 'warn' : 'bad') : '';
-  return `<div class="kpi-card ${type}">
+  const cardClass = pct ? (pct >= 100 ? 'good' : pct >= 80 ? 'warn' : 'bad') : '';
+  const achieveStr = pct !== null ? `${pct}%` : '';
+  const achieveClass = pct ? (pct >= 100 ? 'good' : pct >= 80 ? 'warn' : 'bad') : '';
+  const prevStr = compareMode && delta !== null ? `<span class="kpi-delta ${deltaClass}">${deltaStr}</span><span style="font-size:10px;color:var(--text3);margin-left:4px">前${prevLabel || '期間'}比</span>` : '';
+  return `<div class="kpi-card ${cardClass}">
     <div class="kpi-label">${label}</div>
     <div class="kpi-value">${typeof value === 'number' && value > 999 ? value.toLocaleString() : value}<span class="kpi-unit">${unit}</span></div>
-    <div class="kpi-meta">
+    <div class="kpi-row">
       ${target ? `<span class="kpi-target">目標: ${target.toLocaleString()}${unit}</span>` : ''}
-      ${delta !== null ? `<span class="kpi-delta ${deltaClass}" style="margin-left:8px">${deltaStr}</span>` : ''}
+      ${pct !== null ? `<span class="kpi-achievement ${achieveClass}">${achieveStr}</span>` : ''}
+      ${prevStr}
     </div>
     ${target ? `<div class="progress-bar"><div class="progress-fill ${barClass}" style="width:${Math.min(pct,100)}%"></div></div>` : ''}
   </div>`;
 }
 
-function renderSummary(d) {
-  const s = d.summary;
-  document.getElementById('summary-period').textContent = d.period || '';
+function renderAll(d) {
+  if (!d) return;
+  const pd = getPeriodData(d);
+  checkAlerts(pd);
+  document.getElementById('summary-period').textContent = pd.label;
+  renderSummary(d, pd);
+  renderMarketing(d);
+  renderWeb(d);
+  renderLeads(d);
+}
+
+function renderSummary(d, pd) {
+  const t = getTargets();
   document.getElementById('kpi-summary').innerHTML =
-    kpiCard('問合せ数', s.inquiries.value, '件', s.inquiries.target, s.inquiries.prev) +
-    kpiCard('来場数', s.visits.value, '件', s.visits.target, s.visits.prev, 'good') +
-    kpiCard('申込数', s.applications.value, '件', s.applications.target, s.applications.prev) +
-    kpiCard('契約数', s.contracts.value, '件', s.contracts.target, s.contracts.prev);
+    kpiCard('問合せ数', pd.inquiries, '件', t.inquiries, pd.prevInquiries, '月') +
+    kpiCard('来場数', pd.visits || d.summary.visits.value, '件', t.visits, pd.prevVisits, '月') +
+    kpiCard('申込数', pd.applications || d.summary.applications.value, '件', t.applications, pd.prevApplications, '月') +
+    kpiCard('契約数', pd.contracts, '件', t.contracts, pd.prevContracts, '月');
 
-  // Funnel
-  const max = d.funnel[0].value;
-  document.getElementById('funnel-wrap').innerHTML = `<div class="funnel">${
-    d.funnel.map((f,i) => {
-      const h = Math.round(f.value/max*140);
-      const cvr = i>0 ? (f.value/d.funnel[i-1].value*100).toFixed(1)+'%' : '';
-      return `<div class="funnel-step">
-        <div class="funnel-val">${f.value}</div>
-        ${cvr ? `<div class="funnel-cvr">${cvr}</div>` : ''}
-        <div class="funnel-bar" style="height:${h}px;background:hsl(${220-i*30},80%,60%)"></div>
-        <div class="funnel-label">${f.label}</div>
-      </div>`;
-    }).join('')
-  }</div>`;
+  const fv = [
+    { label: '問合せ', value: pd.inquiries },
+    { label: '来場', value: pd.visits || d.summary.visits.value },
+    { label: '申込', value: pd.applications || d.summary.applications.value },
+    { label: '契約', value: pd.contracts },
+  ];
+  const max = fv[0].value;
+  document.getElementById('funnel-wrap').innerHTML = `<div class="funnel">${fv.map((f,i) => {
+    const h = Math.round(f.value / max * 140);
+    const cvr = i > 0 ? (f.value / fv[i-1].value * 100).toFixed(1) + '%' : '';
+    return `<div class="funnel-step">
+      <div class="funnel-val">${f.value}</div>
+      ${cvr ? `<div class="funnel-cvr">${cvr}</div>` : ''}
+      <div class="funnel-bar" style="height:${h}px;background:hsl(${220-i*30},80%,60%)"></div>
+      <div class="funnel-label">${f.label}</div>
+    </div>`;
+  }).join('')}</div>`;
 
-  // Channel table
   document.getElementById('channel-table').innerHTML =
     `<tr><th>チャネル</th><th>問合せ</th><th>来場</th><th>問→来</th><th>申込</th><th>来→申</th><th>契約</th></tr>` +
-    d.channels.map(c => {
-      const v2i = c.visits/c.inquiries*100;
-      const a2v = c.applications/c.visits*100;
-      return `<tr><td>${c.name}</td><td>${c.inquiries}</td><td>${c.visits}</td><td style="color:var(--accent2)">${v2i.toFixed(1)}%</td><td>${c.applications}</td><td style="color:var(--accent2)">${a2v.toFixed(1)}%</td><td>${c.contracts}</td></tr>`;
-    }).join('');
+    d.channels.map(c => `<tr>
+      <td>${c.name}</td><td>${c.inquiries}</td><td>${c.visits}</td>
+      <td style="color:var(--accent2)">${(c.visits/c.inquiries*100).toFixed(1)}%</td>
+      <td>${c.applications}</td>
+      <td style="color:var(--accent2)">${(c.applications/c.visits*100).toFixed(1)}%</td>
+      <td>${c.contracts}</td>
+    </tr>`).join('');
 
-  // Trend chart
-  new Chart(document.getElementById('trend-chart'), {
+  if (charts['trend']) { charts['trend'].destroy(); }
+  const trendCtx = document.getElementById('trend-chart');
+  const showMonths = currentPeriod === '3months' ? d.trend.months.slice(-3) : currentPeriod === 'lastMonth' ? d.trend.months.slice(-2) : d.trend.months;
+  const showInq = currentPeriod === '3months' ? d.trend.inquiries.slice(-3) : currentPeriod === 'lastMonth' ? d.trend.inquiries.slice(-2) : d.trend.inquiries;
+  const showCon = currentPeriod === '3months' ? d.trend.contracts.slice(-3) : currentPeriod === 'lastMonth' ? d.trend.contracts.slice(-2) : d.trend.contracts;
+  const trendTarget = showMonths.map(() => t.inquiries);
+  charts['trend'] = new Chart(trendCtx, {
     type: 'line',
     data: {
-      labels: d.trend.months,
+      labels: showMonths,
       datasets: [
-        { label: '問合せ数', data: d.trend.inquiries, borderColor: '#4f8ef7', backgroundColor: 'rgba(79,142,247,0.1)', tension: 0.3, yAxisID: 'y' },
-        { label: '契約数', data: d.trend.contracts, borderColor: '#4ff7a0', backgroundColor: 'rgba(79,247,160,0.1)', tension: 0.3, yAxisID: 'y1' }
+        { label: '問合せ数', data: showInq, borderColor: '#4f8ef7', backgroundColor: 'rgba(79,142,247,0.1)', tension: 0.3, yAxisID: 'y' },
+        { label: '目標', data: trendTarget, borderColor: 'rgba(247,193,79,0.5)', borderDash: [4,4], pointRadius: 0, tension: 0, yAxisID: 'y' },
+        { label: '契約数', data: showCon, borderColor: '#4ff7a0', backgroundColor: 'rgba(79,247,160,0.1)', tension: 0.3, yAxisID: 'y1' },
       ]
     },
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#8892a4', font: { size: 11 } } } }, scales: { x: { ticks: { color: '#4a5568' }, grid: { color: '#1e2330' } }, y: { ticks: { color: '#4a5568' }, grid: { color: '#1e2330' } }, y1: { position: 'right', ticks: { color: '#4a5568' }, grid: { display: false } } } }
   });
 
-  document.getElementById('summary-insights').innerHTML = `
-    <div class="insight-card bad"><div class="insight-tag">⚠ 警告</div><div class="insight-text">契約数が目標比75%。申込→契約の転換率改善が急務。商談フォローアップ頻度を週2回に増やし、住宅ローン相談会の実施を推奨。</div></div>
-    <div class="insight-card warn"><div class="insight-tag">👁 注視</div><div class="insight-text">問合せ数が目標比85.5%。Google広告のCVRが低下傾向のため、LPのファーストビュー改修と検索キーワードの見直しを推奨。</div></div>
-    <div class="insight-card good"><div class="insight-tag">✅ 好調</div><div class="insight-text">来場数が目標比108.8%と超過達成。SNS来場予約キャンペーンの効果が高く、引き続き予算配分の維持・拡大を推奨。</div></div>`;
+  document.getElementById('summary-insights').innerHTML = generateInsights(pd, t);
+}
+
+function generateInsights(pd, t) {
+  const alerts = [];
+  const goods = [];
+  const warns = [];
+  const contractPct = Math.round(pd.contracts / t.contracts * 100);
+  const inquiryPct = Math.round(pd.inquiries / t.inquiries * 100);
+  const visitPct = Math.round((pd.visits || 0) / t.visits * 100);
+  if (contractPct < 80) alerts.push(`契約数が目標比${contractPct}%。申込→契約の転換率改善が急務。商談フォローアップの頻度を週2回に増やし、住宅ローン相談会の実施を推奨。`);
+  if (inquiryPct < 80) alerts.push(`問合せ数が目標比${inquiryPct}%。Google広告のCVRが低下傾向のため、LPのファーストビュー改修と検索キーワードの見直しを推奨。`);
+  if (visitPct >= 100) goods.push(`来場数が目標比${visitPct}%と超過達成。SNS来場予約キャンペーンの効果が高く、引き続き予算配分の維持・拡大を推奨。`);
+  else if (visitPct >= 80) warns.push(`来場数が目標比${visitPct}%。目標まで残り${t.visits - (pd.visits||0)}件。来場促進施策の強化を検討。`);
+  const all = [
+    ...alerts.map(t => `<div class="insight-card bad"><div class="insight-tag">⚠ 警告</div><div class="insight-text">${t}</div></div>`),
+    ...warns.map(t => `<div class="insight-card warn"><div class="insight-tag">👁 注視</div><div class="insight-text">${t}</div></div>`),
+    ...goods.map(t => `<div class="insight-card good"><div class="insight-tag">✅ 好調</div><div class="insight-text">${t}</div></div>`),
+  ];
+  return all.slice(0, 3).join('') || '<div class="insight-card good"><div class="insight-tag">✅ 好調</div><div class="insight-text">全KPIが目標を達成しています。現状の施策を継続してください。</div></div>';
 }
 
 function renderMarketing(d) {
+  const t = getTargets();
   const m = d.marketing;
-  const budgetPct = Math.round(m.budget.spent/m.budget.total*100);
   document.getElementById('kpi-marketing').innerHTML =
-    kpiCard('広告費', '¥'+Math.round(m.budget.spent/1000)+'K', '', null, null) +
-    kpiCard('来場CV数', m.cv.value, '件', m.cv.target, null, 'good') +
-    kpiCard('CPA', '¥'+m.cpa.value.toLocaleString(), '', null, null, 'good') +
+    kpiCard('広告費', '¥' + Math.round(m.budget.spent/1000) + 'K', '', null, null) +
+    kpiCard('来場CV数', m.cv.value, '件', t.visits, null) +
+    kpiCard('CPA', '¥' + m.cpa.value.toLocaleString(), '', t.cpa, null) +
     kpiCard('表示回数', m.impressions.value.toLocaleString(), '', null, null);
 
-  new Chart(document.getElementById('cpa-chart'), {
+  if (charts['cpa']) charts['cpa'].destroy();
+  charts['cpa'] = new Chart(document.getElementById('cpa-chart'), {
     type: 'bar',
-    data: {
-      labels: m.media.map(x=>x.name),
-      datasets: [
-        { label: '実績CPA', data: m.media.map(x=>x.cpa), backgroundColor: '#4f8ef7' },
-        { label: '目標CPA', data: m.media.map(()=>m.cpa.target), backgroundColor: 'rgba(247,193,79,0.3)', borderColor: '#f7c14f', borderWidth: 1 }
-      ]
-    },
+    data: { labels: m.media.map(x=>x.name), datasets: [
+      { label: '実績CPA', data: m.media.map(x=>x.cpa), backgroundColor: '#4f8ef7' },
+      { label: '目標CPA', data: m.media.map(()=>t.cpa), backgroundColor: 'rgba(247,193,79,0.3)', borderColor: '#f7c14f', borderWidth: 1 }
+    ]},
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#8892a4', font: { size: 11 } } } }, scales: { x: { ticks: { color: '#4a5568' }, grid: { color: '#1e2330' } }, y: { ticks: { color: '#4a5568' }, grid: { color: '#1e2330' } } } }
   });
 
-  new Chart(document.getElementById('budget-chart'), {
+  if (charts['budget']) charts['budget'].destroy();
+  charts['budget'] = new Chart(document.getElementById('budget-chart'), {
     type: 'doughnut',
-    data: {
-      labels: m.media.map(x=>x.name),
-      datasets: [{ data: m.media.map(x=>x.cost), backgroundColor: ['#4f8ef7','#f7c14f','#4ff7a0','#f74f4f'] }]
-    },
+    data: { labels: m.media.map(x=>x.name), datasets: [{ data: m.media.map(x=>x.cost), backgroundColor: ['#4f8ef7','#f7c14f','#4ff7a0','#f74f4f'] }] },
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#8892a4', font: { size: 11 } } } } }
   });
 
   document.getElementById('media-table').innerHTML =
-    `<tr><th>媒体</th><th>費用</th><th>CV</th><th>CPA</th><th>CTR</th><th>評価</th></tr>` +
+    `<tr><th>媒体</th><th>費用</th><th>CV</th><th>CPA</th><th>目標比</th><th>CTR</th><th>評価</th></tr>` +
     m.media.map(x => {
+      const cpaPct = Math.round(t.cpa / x.cpa * 100);
       const evalClass = x.eval==='良好'?'badge-good':x.eval==='普通'?'badge-warn':'badge-bad';
-      return `<tr><td>${x.name}</td><td>¥${(x.cost/1000).toFixed(0)}K</td><td>${x.cv}</td><td>¥${x.cpa.toLocaleString()}</td><td>${x.ctr}%</td><td><span class="badge ${evalClass}">${x.eval}</span></td></tr>`;
+      return `<tr><td>${x.name}</td><td>¥${(x.cost/1000).toFixed(0)}K</td><td>${x.cv}</td><td>¥${x.cpa.toLocaleString()}</td><td><span class="kpi-achievement ${cpaPct>=100?'good':cpaPct>=80?'warn':'bad'}">${cpaPct}%</span></td><td>${x.ctr}%</td><td><span class="badge ${evalClass}">${x.eval}</span></td></tr>`;
     }).join('');
 
   document.getElementById('marketing-insights').innerHTML = `
@@ -530,15 +632,16 @@ function renderMarketing(d) {
 }
 
 function renderWeb(d) {
+  const t = getTargets();
   const w = d.web;
-  const prevDelta = w.sessions.prev ? w.sessions.value - w.sessions.prev : null;
   document.getElementById('kpi-web').innerHTML =
     kpiCard('セッション数', w.sessions.value.toLocaleString(), '', null, w.sessions.prev) +
-    kpiCard('CVR（来場予約）', w.cvr.value+'%', '', null, null) +
+    kpiCard('CVR（来場予約）', w.cvr.value + '%', '', t.cvr + '%', null) +
     kpiCard('検索表示回数', w.impressions.value.toLocaleString(), '', null, w.impressions.prev) +
-    kpiCard('平均掲載順位', w.avg_position.value+'位', '', null, null);
+    kpiCard('平均掲載順位', w.avg_position.value + '位', '', null, null);
 
-  new Chart(document.getElementById('session-chart'), {
+  if (charts['session']) charts['session'].destroy();
+  charts['session'] = new Chart(document.getElementById('session-chart'), {
     type: 'doughnut',
     data: { labels: w.session_channels.labels, datasets: [{ data: w.session_channels.values, backgroundColor: ['#4f8ef7','#f7c14f','#4ff7a0','#f74f4f','#8892a4'] }] },
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#8892a4', font: { size: 11 } } } } }
@@ -549,35 +652,85 @@ function renderWeb(d) {
     w.keywords.map(k => `<tr><td>${k.kw}</td><td>${k.impressions.toLocaleString()}</td><td>${k.clicks.toLocaleString()}</td><td>${k.ctr}%</td><td>${k.position}位</td></tr>`).join('');
 
   document.getElementById('web-insights').innerHTML = `
-    <div class="insight-card bad"><div class="insight-tag">⚠ 警告</div><div class="insight-text">初回対応24時間超えが23%。業界調査では初回対応1時間以内の来場転換率が3倍高い。CRM自動応答＋担当者アラートの設定を強く推奨。</div></div>
-    <div class="insight-card warn"><div class="insight-tag">👁 注視</div><div class="insight-text">平均掲載順位8.2位。目標5位以内まで改善余地あり。主要キーワードの内部リンク強化とコンテンツ拡充を推奨。</div></div>
-    <div class="insight-card good"><div class="insight-tag">✅ 好調</div><div class="insight-text">セッション数が前月比+12.4%と好調。オーガニック流入が増加傾向にあり、SEO施策の効果が出始めている。</div></div>`;
+    <div class="insight-card bad"><div class="insight-tag">⚠ 警告</div><div class="insight-text">初回対応24時間超えが23%。CRM自動応答＋担当者アラートの設定を強く推奨。</div></div>
+    <div class="insight-card warn"><div class="insight-tag">👁 注視</div><div class="insight-text">平均掲載順位8.2位。目標5位以内まで改善余地あり。主要キーワードの内部リンク強化を推奨。</div></div>
+    <div class="insight-card good"><div class="insight-tag">✅ 好調</div><div class="insight-text">セッション数が前月比+12.4%と好調。SEO施策の効果が出始めている。</div></div>`;
 }
 
 function renderLeads(d) {
+  const t = getTargets();
   const l = d.leads;
   document.getElementById('kpi-leads').innerHTML =
     kpiCard('総リード数', l.total.value, '件', null, l.total.prev) +
     kpiCard('ホットリード', l.hot.value, '件', null, null, 'good') +
-    kpiCard('初回対応率', l.response_rate.value+'%', '', l.response_rate.target, null) +
-    kpiCard('平均対応時間', l.avg_response_hours.value+'h', '', null, null);
+    kpiCard('初回対応率', l.response_rate.value + '%', '', l.response_rate.target + '%', null) +
+    kpiCard('平均対応時間', l.avg_response_hours.value + 'h', '', null, null);
 
-  new Chart(document.getElementById('lead-status-chart'), {
+  if (charts['leadStatus']) charts['leadStatus'].destroy();
+  charts['leadStatus'] = new Chart(document.getElementById('lead-status-chart'), {
     type: 'doughnut',
     data: { labels: l.status.labels, datasets: [{ data: l.status.values, backgroundColor: ['#4ff7a0','#4f8ef7','#f7c14f','#8892a4','#f74f4f'] }] },
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#8892a4', font: { size: 11 } } } } }
   });
 
-  new Chart(document.getElementById('lead-channel-chart'), {
+  if (charts['leadChannel']) charts['leadChannel'].destroy();
+  charts['leadChannel'] = new Chart(document.getElementById('lead-channel-chart'), {
     type: 'bar',
     data: { labels: l.by_channel.labels, datasets: [{ label: 'リード数', data: l.by_channel.values, backgroundColor: '#4f8ef7' }] },
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#4a5568' }, grid: { color: '#1e2330' } }, y: { ticks: { color: '#4a5568' }, grid: { color: '#1e2330' } } } }
   });
 
   document.getElementById('lead-insights').innerHTML = `
-    <div class="insight-card bad"><div class="insight-tag">⚠ 警告</div><div class="insight-text">初回対応24時間超えが23%。業界調査では初回対応1時間以内の来場転換率が3倍高い。CRM自動応答＋担当者アラートの設定を強く推奨。</div></div>
-    <div class="insight-card warn"><div class="insight-tag">👁 注視</div><div class="insight-text">「検討中」リードが全体の38%。メールシーケンス・LINE公式アカウントを活用したナーチャリングを導入することで来場転換率+5〜8pt改善が見込める。</div></div>
-    <div class="insight-card good"><div class="insight-tag">✅ 好調</div><div class="insight-text">ホットリード比率13.2%は業界平均を上回る水準。来場予約への転換を最優先に、個別フォローアップを強化することを推奨。</div></div>`;
+    <div class="insight-card bad"><div class="insight-tag">⚠ 警告</div><div class="insight-text">初回対応24時間超えが23%。CRM自動応答＋担当者アラートの設定を強く推奨。</div></div>
+    <div class="insight-card warn"><div class="insight-tag">👁 注視</div><div class="insight-text">「検討中」リードが全体の38%。メールシーケンス・LINEナーチャリングで来場転換率+5〜8pt改善が見込める。</div></div>
+    <div class="insight-card good"><div class="insight-tag">✅ 好調</div><div class="insight-text">ホットリード比率13.2%は業界平均を上回る水準。来場予約への転換を最優先に個別フォローを強化推奨。</div></div>`;
+}
+
+function getDemoData() {
+  return {
+    updated_at: '2026-04-27 09:00', period: '2026年4月',
+    summary: { inquiries:{value:342,target:400,prev:355}, visits:{value:87,target:80,prev:90}, applications:{value:23,target:28,prev:25}, contracts:{value:6,target:8,prev:8} },
+    funnel: [{label:'問合せ',value:342},{label:'来場',value:87},{label:'申込',value:23},{label:'契約',value:6}],
+    channels: [
+      {name:'Google広告',inquiries:124,visits:28,applications:8,contracts:2},
+      {name:'Meta広告',inquiries:89,visits:22,applications:5,contracts:1},
+      {name:'Yahoo広告',inquiries:54,visits:14,applications:4,contracts:2},
+      {name:'LINE広告',inquiries:43,visits:13,applications:3,contracts:1},
+      {name:'SEO/自然検索',inquiries:22,visits:7,applications:2,contracts:0}
+    ],
+    trend: {
+      months:['11月','12月','1月','2月','3月','4月'],
+      inquiries:[290,265,310,328,355,342],
+      contracts:[5,4,7,6,8,6],
+      visits:[72,65,78,81,90,87],
+      applications:[20,18,22,21,25,23]
+    },
+    marketing: {
+      budget:{spent:311000,total:380000}, cv:{value:87,target:80}, cpa:{value:3580,target:4000}, impressions:{value:11115,ctr:2.9,ctr_target:4.0},
+      media:[
+        {name:'Google',cost:142000,cv:38,cpa:3737,ctr:3.2,eval:'普通'},
+        {name:'Meta',cost:88000,cv:26,cpa:3385,ctr:2.4,eval:'良好'},
+        {name:'Yahoo',cost:52000,cv:15,cpa:3467,ctr:2.8,eval:'良好'},
+        {name:'LINE',cost:29000,cv:8,cpa:3625,ctr:3.8,eval:'普通'}
+      ]
+    },
+    web: {
+      sessions:{value:8432,prev:7501}, cvr:{value:1.03,target:1.20}, impressions:{value:42180,prev:38980}, avg_position:{value:8.2,target:5.0},
+      session_channels:{labels:['Google広告','Meta広告','オーガニック','ダイレクト','その他'],values:[3210,1890,1540,1120,672]},
+      keywords:[
+        {kw:'デュオセーヌ 久我山',impressions:8240,clicks:612,ctr:7.4,position:3.1},
+        {kw:'新浦安 新築マンション',impressions:6120,clicks:245,ctr:4.0,position:7.8},
+        {kw:'大宮 新築 タワーマンション',impressions:5480,clicks:182,ctr:3.3,position:9.2},
+        {kw:'名古屋 覚王山 マンション',impressions:4210,clicks:158,ctr:3.8,position:6.5},
+        {kw:'デュオセーヌ 価格',impressions:3840,clicks:384,ctr:10.0,position:2.4}
+      ]
+    },
+    leads: {
+      total:{value:342,prev:355}, hot:{value:45,pct:13.2}, response_rate:{value:77,target:90}, avg_response_hours:{value:3.2,target:1.0},
+      status:{labels:['ホット','検討中','資料請求のみ','来場済み','クローズ'],values:[45,130,89,52,26]},
+      by_channel:{labels:['Google広告','Meta広告','Yahoo広告','LINE','SEO'],values:[124,89,54,43,22]}
+    }
+  };
 }
 </script>
 </body>
